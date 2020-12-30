@@ -8,25 +8,30 @@ const Button = ({ onClick, text, color }) => (
 )
 
 const StatisticLine = ({text, value}) => (
-  <><br /> {text} {value} </>
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 )
 
 const Statistics = ({ good, bad, neutral, all }) => {
   if (all > 0){
     return (
-      <div>
-        <StatisticLine text="good" value ={good} />
-        <StatisticLine text="neutral" value ={neutral} />
-        <StatisticLine text="bad" value ={bad} />
-        <StatisticLine text="all" value ={all} />
-        <StatisticLine text="average" value ={(good-bad)/all} />
-        <StatisticLine text="positive" value ={good/all} /><>%</>
-      </div>
+      <table>
+        <tbody>
+          <StatisticLine text="good" value ={good} />
+          <StatisticLine text="neutral" value ={neutral} />
+          <StatisticLine text="bad" value ={bad} />
+          <StatisticLine text="all" value ={all} />
+          <StatisticLine text="average" value ={(good-bad)/all} />
+          <StatisticLine text="positive" value ={(good/all)*100 + " %"} />
+        </tbody>
+      </table>
     )
   }
   else{
     return( 
-      <p><br />No feedback given yet.</p>
+      <p>No feedback given yet.</p>
     )
   }
 }
@@ -54,15 +59,15 @@ const App = () => {
   }
   
   return (
-    <div>
-      <h2>Give feedback for Unicafe!</h2>
-      <Button onClick={handleGoodClick} text={"Good"} color={'green'} />
-      <Button onClick={handleNeutralClick} text={"Neutral"} color={'orange'}/>
-      <Button onClick={handleBadClick} text={"Bad"} color={'red'}/>
+    <>
+    <h2>Give feedback for Unicafe!</h2>
+    <Button onClick={handleGoodClick} text={"Good"} color={'green'} />
+    <Button onClick={handleNeutralClick} text={"Neutral"} color={'orange'}/>
+    <Button onClick={handleBadClick} text={"Bad"} color={'red'}/>
 
-      <h3>Statistics</h3>
-      <Statistics good={good} bad={bad} neutral={neutral} all={all} />
-    </div>
+    <h3>Statistics</h3>
+    <Statistics good={good} bad={bad} neutral={neutral} all={all} />
+    </>
   )
 }
 

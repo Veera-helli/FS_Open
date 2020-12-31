@@ -11,13 +11,22 @@ const Stat = ({ num }) => (
   <p>has {num} votes</p>
 )
 
-const MostVotes = ({ text, num }) => (
-  <div>
-    <h1>Anecdote with most votes</h1>
-    <p>{text}</p>
-    <Stat num = {num} />
-  </div>
-)
+const MostVotes = ({ text, num }) => {
+  if (num > 0){
+    return (
+      <div>
+        <h1>Anecdote with most votes</h1>
+        <p>{text}</p>
+        <Stat num = {num} />
+      </div>
+    )
+  }
+  else{
+    return( 
+      <p>No votes given yet.</p>
+    )
+  }
+}
 
 const App = (props) => {
   const [selected, setSelected] = useState(Math.floor(Math.random() * Math.floor(5)))

@@ -11,26 +11,41 @@ const Stat = ({ num }) => (
   <p>has {num} votes</p>
 )
 
+const MostVotes = ({ text, num }) => (
+  <div>
+    <h1>Anecdote with most votes</h1>
+    <p>{text}</p>
+    <Stat num = {num} />
+  </div>
+)
+
 const App = (props) => {
   const [selected, setSelected] = useState(Math.floor(Math.random() * Math.floor(5)))
   const [votes, setVotes] = useState(0)
+  const [popular, setPopular] = useState(0)
 
   const handleRandom = () => {
-    setSelected(Math.floor(Math.random() * Math.floor(5)))
-    setVotes(props.anecdotes[selected][1])
+    const x = Math.floor(Math.random() * Math.floor(5))
+    setSelected(x)
+    setVotes(props.anecdotes[x][1])
   }
 
-  const setToValue = (newValue) => () => {
-    props.anecdotes[newValue][1] += 1
+  const addVote = (val) => () => {
+    props.anecdotes[val][1] += 1
     setVotes(props.anecdotes[selected][1])
+    if (props.anecdotes[val][1] > props.anecdotes[popular][1]){
+      setPopular(val)
+    }
   }
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{props.anecdotes[selected][0]}</p>
       <Stat num = {votes} />
-      <Button onClick={setToValue(selected)} text={"Vote"}/>
+      <Button onClick={addVote(selected)} text={"Vote"}/>
       <Button onClick={handleRandom} text={"Next anecdote"}/>
+      <MostVotes text={props.anecdotes[popular][0]} num={props.anecdotes[popular][1]} />
     </div>
   )
 }

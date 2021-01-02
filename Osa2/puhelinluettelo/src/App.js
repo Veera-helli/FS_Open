@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 
 const Filter = ({ handleFilterChange, newFilter}) => {
@@ -44,16 +45,31 @@ const PersonForm = ({ newName, newNumber, handleChange,
     )
 }
 
-const Persons = ({ persons }) => {
-    return (    
-        <table>
-            <tbody>
-            {persons.filter(person => person.showing === true).map(person =>           
-            <Number person={person} key={person.name} />        
-            )}
-            </tbody>
-        </table>
-    )
+const Persons = ({ persons, newFilter }) => {
+    console.log('Here we are')
+    if (newFilter !== ''){
+        return (    
+            <table>
+                <tbody>
+                {persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()) === true).map(person =>           
+                <Number person={person} key={person.name} />        
+                )}
+                </tbody>
+            </table>
+        )
+    }
+    else{
+        return (    
+            <table>
+                <tbody>
+                {persons.map(person =>           
+                <Number person={person} key={person.name} />        
+                )}
+                </tbody>
+            </table>
+        )
+
+    }
 }
 
 const Number = ({ person }) => {
@@ -66,9 +82,7 @@ const Number = ({ person }) => {
 }
 
 const App = () => {
-    const [ persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '045-12345678', showing: true}
-    ]) 
+    const [ persons, setPersons] = useState([]) 
 
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
@@ -82,23 +96,19 @@ const App = () => {
         setNewNumber(event.target.value)  
     }
 
+    useEffect(() => {    
+        console.log('effect')    
+        axios      
+        .get('http://localhost:3001/persons')      
+        .then(response => {        
+            console.log('promise fulfilled')        
+            setPersons(response.data)      
+        })  
+    }, [])  
+    console.log('render', persons)
+
     const handleFilterChange = (event) => {   
         setNewFilter(event.target.value)
-        if (event.target.value !== ''){
-            for (let index = 0; index < persons.length; index++) {
-                const element = persons[index];
-                const name = element.name.toLowerCase()
-                if (!name.includes(event.target.value.toLowerCase())){
-                    element.showing = false
-                }
-                else{
-                    element.showing = true
-                }
-            }
-        }
-        else{
-            persons.forEach(person => person.showing = true)
-        }
     }
 
   return (
@@ -113,9 +123,25 @@ const App = () => {
       setNewName={setNewName} setNewNumber={setNewNumber} setPersons={setPersons} />
     
       <h2>Numbers</h2>
-      <Persons persons={persons}/>
+      <Persons persons={persons} newFilter={newFilter} />
     </>
   )
 }
 
 export default App
+
+/*if (event.target.value !== ''){
+    for (let index = 0; index < persons.length; index++) {
+        const element = persons[index];
+        const name = element.name.toLowerCase()
+        if (!element.name.toLowerCase().includes(event.target.value.toLowerCase())){
+            element.showing = false
+        }
+        else{
+            element.showing = true
+        }
+    }
+}
+else{
+    persons.forEach(person => person.showing = true)
+}*/

@@ -1,5 +1,61 @@
 import React, { useState } from 'react'
 
+
+const Filter = ({ handleFilterChange, newFilter}) => {
+    return (    
+    <form>
+        <div>filter: <input value={newFilter} onChange={handleFilterChange}/></div>
+    </form>
+    )
+}
+
+const PersonForm = ({ newName, newNumber, handleChange,
+     handleNumChange, persons, setNewName, setNewNumber, setPersons}) => {
+
+    const addName = (event) => {
+        event.preventDefault()
+
+        const nameObject = {
+          name: newName,
+          number: newNumber, 
+          showing: true
+        }
+
+        if (persons.map(person => person.name).includes(newName)){
+            setNewName('')
+            setNewNumber('')
+            window.alert(`${newName} is already added to phonebook`)
+        }
+        else{
+            setPersons(persons.concat(nameObject))
+            setNewName('')
+            setNewNumber('')
+        }
+    }
+
+    return (    
+        <form onSubmit={addName}>
+            <div>name: <input value={newName} onChange={handleChange} /></div>
+            <div>number: <input value={newNumber} onChange={handleNumChange} /></div>
+            <div>
+            <button type="submit" >add</button>
+            </div>
+        </form>
+    )
+}
+
+const Persons = ({ persons }) => {
+    return (    
+        <table>
+            <tbody>
+            {persons.filter(person => person.showing === true).map(person =>           
+            <Number person={person} key={person.name} />        
+            )}
+            </tbody>
+        </table>
+    )
+}
+
 const Number = ({ person }) => {
     return (    
         <tr>
@@ -45,53 +101,19 @@ const App = () => {
         }
     }
 
-    const addName = (event) => {
-        event.preventDefault()
-
-        const nameObject = {
-          name: newName,
-          number: newNumber, 
-          showing: true
-        }
-
-        if (persons.map(person => person.name).includes(newName)){
-            setNewName('')
-            setNewNumber('')
-            window.alert(`${newName} is already added to phonebook`)
-        }
-        else{
-            setPersons(persons.concat(nameObject))
-            setNewName('')
-            setNewNumber('')
-        }
-    }
-
   return (
     <>
       <h2>Phonebook</h2>
-      <form>
-        <div>filter: <input value={newFilter} onChange={handleFilterChange}/></div>
-      </form>
+      <Filter handleFilterChange={handleFilterChange} newFilter={newFilter} />
       
-
       <h3>Add new</h3>
-
-      <form onSubmit={addName}>
-        <div>name: <input value={newName} onChange={handleChange}/></div>
-        <div>number: <input value={newNumber} onChange={handleNumChange}/></div>
-        <div>
-          <button type="submit" >add</button>
-        </div>
-      </form>
-
+      <PersonForm newName={newName} 
+      newNumber={newNumber} handleChange={handleChange} 
+      handleNumChange={handleNumChange} persons={persons} 
+      setNewName={setNewName} setNewNumber={setNewNumber} setPersons={setPersons} />
+    
       <h2>Numbers</h2>
-      <table>
-          <tbody>
-            {persons.filter(person => person.showing === true).map(person =>           
-            <Number person={person} key={person.name} />        
-            )}
-          </tbody>
-      </table>
+      <Persons persons={persons}/>
     </>
   )
 }

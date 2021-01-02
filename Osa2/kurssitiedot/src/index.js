@@ -32,7 +32,7 @@ const Content = (props) => {
     <table>
         <tbody>
             {props.parts.map(part =>
-            <Part part={part.name} exercises={part.exercises} />        
+            <Part part={part.name} exercises={part.exercises} key={part.id}/>        
             )}      
         </tbody>
     </table>
@@ -57,8 +57,12 @@ const Content = (props) => {
     */
 
 const Total = (props) => {
+  const sum = props.parts
+  .map(item => item.exercises)
+  .reduce((prev, curr) => prev + curr, 0)
+
   return (
-    <p>Number of exercises</p>
+    <h4>Number of exercises {sum} </h4>
   )
 }
 
@@ -75,7 +79,7 @@ const App = () => {
       },
       {
         name: 'Using props to pass data',
-        exercises: 7,
+        exercises: 10,
         id: 2
       },
       {

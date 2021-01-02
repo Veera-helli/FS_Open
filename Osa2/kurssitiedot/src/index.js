@@ -110,6 +110,22 @@ const App = () => {
           id: 2
         }
       ]
+    }, 
+    {
+      name: 'Matikka',
+      id: 3,
+      parts: [
+        {
+          name: 'Kertolasku',
+          exercises: 8,
+          id: 1
+        },
+        {
+          name: 'Jakolasku',
+          exercises: 7,
+          id: 2
+        }
+      ]
     }
   ]
 

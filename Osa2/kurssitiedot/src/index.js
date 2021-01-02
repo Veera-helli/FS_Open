@@ -62,7 +62,7 @@ const Total = (props) => {
   .reduce((prev, curr) => prev + curr, 0)
 
   return (
-    <h4>Number of exercises {sum} </h4>
+    <h4>Number of exercises: {sum} </h4>
   )
 }
 

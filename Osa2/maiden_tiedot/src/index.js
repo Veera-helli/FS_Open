@@ -14,6 +14,26 @@ const Language = ({ name }) => (
   <li>{name}</li>  
 )
 
+const Flag = ({ pic }) => (    
+  <img 
+  src={pic}
+  alt="flag"
+  style={{ width: "20%", margin: "10px 30px"}}
+  /> 
+)
+
+const WeatherData = ({ weatherdata }) => (  
+  <>  
+    <p>Temperature: {weatherdata.temperature} Celsius </p>
+    <img 
+    src={weatherdata.weather_icons[0]}
+    alt="icon"
+    style={{ width: "20%", margin: "10px 30px"}}
+    />
+    <p>Wind: {weatherdata.wind_speed} mph, direction: {weatherdata.wind_dir} </p>
+  </>
+)
+
 const Country = ({obj, weatherdata, setWeatherdata}) => {
   //NOTE: the weather source server `http://api.weatherstack.com/current` was not stable 
   // and could unfortunately only access New York data
@@ -28,21 +48,9 @@ const Country = ({obj, weatherdata, setWeatherdata}) => {
         {obj.languages.map(language =>           
         <Language key={language.name} name={language.name}/>)}
       </ul>
-      
-      <img 
-        src={obj.flag}
-        alt="flag"
-        style={{ width: "20%", margin: "10px 30px"}}
-      />
+      <Flag pic={obj.flag}/>
       <h2>Weather in {obj.capital}</h2>
-      <p>Temperature: {weatherdata.temperature} Celsius </p>
-      <img 
-      src={weatherdata.weather_icons[0]}
-      alt="icon"
-      style={{ width: "20%", margin: "10px 30px"}}
-      />
-      <p>Wind: {weatherdata.wind_speed} mph, direction: {weatherdata.wind_dir} </p>
-      
+      <WeatherData weatherdata={weatherdata}/>
     </div>
   )
 }

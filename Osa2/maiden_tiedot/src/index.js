@@ -14,8 +14,6 @@ const Language = ({ name }) => (
   <li>{name}</li>  
 )
 
-
-
 const Country = ({obj}) => {
   return (    
     <div>
@@ -37,20 +35,44 @@ const Country = ({obj}) => {
   )
 }
 
-const Countries = ({ countries, newFilter }) => {
-  console.log('Here we are')
+const ListItem = ({country, handleSubmit}) => {
+  return (    
+    <tr>
+      <td>{country.name}</td>
+      <td>
+        <form onSubmit={handleSubmit(country)}>
+          <div>
+            <button type="submit" >show</button>
+          </div>
+        </form>
+      </td>
+    </tr>
+  )
+}
+
+
+const CountryList = ({filteredList, handleSubmit}) => {
+  return (    
+    <table>
+        <tbody>
+        {filteredList.map(country =>           
+          <ListItem key={country.name} country={country} handleSubmit={handleSubmit}/> )}
+        </tbody>
+    </table>
+  )
+}
+
+const Countries = ({ setNewFilter, newFilter, filteredList, setFilteredList}) => {
+  
   if (newFilter !== ''){
-    const filteredList = countries.filter(country => country.name.toLowerCase().includes(newFilter.toLowerCase()) === true)
-    console.log(filteredList.length)
+
+    const handleSubmit = (country) =>(event) => {
+      setFilteredList([country])
+    }
+
     if (filteredList.length < 11 & filteredList.length > 1){
       return (    
-          <table>
-              <tbody>
-              { filteredList.map(country =>           
-              <tr key={country.name}><td>{country.name}</td></tr>        
-              )}
-              </tbody>
-          </table>
+        <CountryList filteredList={filteredList} handleSubmit={handleSubmit} />
       )
     }
     else if (filteredList.length === 0){
@@ -87,9 +109,11 @@ const Countries = ({ countries, newFilter }) => {
 const App = () => {
   const [ countries, setCountries] = useState([]) 
   const [ newFilter, setNewFilter] = useState('')
+  const [filteredList, setFilteredList] = useState([])
 
   const handleFilterChange = (event) => {   
     setNewFilter(event.target.value)
+    setFilteredList(countries.filter(country => country.name.toLowerCase().includes(event.target.value.toLowerCase()) === true))
   }
 
   useEffect(() => {  
@@ -104,7 +128,8 @@ const App = () => {
   return (
     <>
       <Filter handleFilterChange={handleFilterChange} newFilter={newFilter} />
-      <Countries countries={countries} newFilter={newFilter} />
+      <Countries setNewFilter={setNewFilter} newFilter={newFilter}
+       filteredList={filteredList} setFilteredList={setFilteredList} />
     </>
   )
 }

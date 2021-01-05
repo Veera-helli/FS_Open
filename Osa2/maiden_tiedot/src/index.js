@@ -15,7 +15,9 @@ const Language = ({ name }) => (
 )
 
 const Country = ({obj, weatherdata, setWeatherdata}) => {
-  //NOTE: the weather source server `http://api.weatherstack.com/current` was not stable, which lead me to these choices 
+  //NOTE: the weather source server `http://api.weatherstack.com/current` was not stable 
+  // and could unfortunately only access New York data
+  //, which lead me to show that data only (for all countries)
   return (    
     <div>
       <h1>{obj.name}</h1>
@@ -28,9 +30,9 @@ const Country = ({obj, weatherdata, setWeatherdata}) => {
       </ul>
       
       <img 
-      src={obj.flag}
-      alt="flag"
-      style={{ width: "20%", margin: "10px 30px"}}
+        src={obj.flag}
+        alt="flag"
+        style={{ width: "20%", margin: "10px 30px"}}
       />
       <h2>Weather in {obj.capital}</h2>
       <p>Temperature: {weatherdata.temperature} Celsius </p>
@@ -120,16 +122,13 @@ const Countries = ({ setNewFilter, newFilter, filteredList,
 const App = () => {
   const [ countries, setCountries] = useState([]) 
   const [ newFilter, setNewFilter] = useState('')
-  const [filteredList, setFilteredList] = useState([])
-
+  const [ filteredList, setFilteredList] = useState([])
   const [ weatherdata, setWeatherdata] = useState([]) 
 
   const handleFilterChange = (event) => {  
- 
     setNewFilter(event.target.value)
     setFilteredList(countries.filter(country => country.name.toLowerCase().includes(event.target.value.toLowerCase()) === true))
   }
-
   
   useEffect(() => { 
     const params = {

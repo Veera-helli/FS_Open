@@ -14,7 +14,20 @@ const Language = ({ name }) => (
   <li>{name}</li>  
 )
 
-const Country = ({obj}) => {
+const Country = ({obj, weatherdata, setWeatherdata}) => {
+  const params = {
+    access_key: process.env.REACT_APP_API_KEY,
+    query: obj.capital
+  }
+
+  axios      
+  .get(`http://api.weatherstack.com/current`, {params})   
+  .then(response => {        // https access restricted 
+      console.log('promise fulfilled 2') 
+      setWeatherdata(response.data)  
+      console.log("weather data:", weatherdata)   
+  })
+
   return (    
     <div>
       <h1>{obj.name}</h1>
@@ -31,6 +44,9 @@ const Country = ({obj}) => {
       alt="flag"
       style={{ width: "20%", margin: "10px 30px"}}
       />
+      <h2>Weather in {obj.capital}</h2>
+      <p>Temperature: {weatherdata.temperature} Celsius </p>
+      <p>Wind: {weatherdata.wind_speed} mph, direction: {weatherdata.wind_dir} </p>
     </div>
   )
 }
@@ -62,7 +78,8 @@ const CountryList = ({filteredList, handleSubmit}) => {
   )
 }
 
-const Countries = ({ setNewFilter, newFilter, filteredList, setFilteredList}) => {
+const Countries = ({ setNewFilter, newFilter, filteredList,
+   setFilteredList, weatherdata, setWeatherdata}) => {
   
   if (newFilter !== ''){
 
@@ -85,7 +102,7 @@ const Countries = ({ setNewFilter, newFilter, filteredList, setFilteredList}) =>
     else if (filteredList.length === 1){
       return (    
         <div>
-          <Country obj={filteredList[0]}/>
+          <Country obj={filteredList[0]} weatherdata={weatherdata} setWeatherdata={setWeatherdata} />
         </div>
       )
     }
@@ -111,7 +128,10 @@ const App = () => {
   const [ newFilter, setNewFilter] = useState('')
   const [filteredList, setFilteredList] = useState([])
 
-  const handleFilterChange = (event) => {   
+  const [ weatherdata, setWeatherdata] = useState([]) 
+
+  const handleFilterChange = (event) => { 
+    console.log(weatherdata)  
     setNewFilter(event.target.value)
     setFilteredList(countries.filter(country => country.name.toLowerCase().includes(event.target.value.toLowerCase()) === true))
   }
@@ -120,7 +140,7 @@ const App = () => {
     axios      
     .get('https://restcountries.eu/rest/v2/all')      
     .then(response => {        
-        console.log('promise fulfilled')        
+        console.log('promise fulfilled 1')        
         setCountries(response.data)      
       })  
   }, [])
@@ -129,7 +149,7 @@ const App = () => {
     <>
       <Filter handleFilterChange={handleFilterChange} newFilter={newFilter} />
       <Countries setNewFilter={setNewFilter} newFilter={newFilter}
-       filteredList={filteredList} setFilteredList={setFilteredList} />
+       filteredList={filteredList} setFilteredList={setFilteredList} setWeatherdata={setWeatherdata} weatherdata={weatherdata} />
     </>
   )
 }

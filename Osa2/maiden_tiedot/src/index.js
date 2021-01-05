@@ -15,19 +15,7 @@ const Language = ({ name }) => (
 )
 
 const Country = ({obj, weatherdata, setWeatherdata}) => {
-  const params = {
-    access_key: process.env.REACT_APP_API_KEY,
-    query: obj.capital
-  }
-
-  axios      
-  .get(`http://api.weatherstack.com/current`, {params})   
-  .then(response => {        // https access restricted 
-      console.log('promise fulfilled 2') 
-      setWeatherdata(response.data)  
-      console.log("weather data:", weatherdata)   
-  })
-
+  //NOTE: the weather source server `http://api.weatherstack.com/current` was not stable, which lead me to these choices 
   return (    
     <div>
       <h1>{obj.name}</h1>
@@ -46,7 +34,13 @@ const Country = ({obj, weatherdata, setWeatherdata}) => {
       />
       <h2>Weather in {obj.capital}</h2>
       <p>Temperature: {weatherdata.temperature} Celsius </p>
+      <img 
+      src={weatherdata.weather_icons[0]}
+      alt="icon"
+      style={{ width: "20%", margin: "10px 30px"}}
+      />
       <p>Wind: {weatherdata.wind_speed} mph, direction: {weatherdata.wind_dir} </p>
+      
     </div>
   )
 }
@@ -130,11 +124,26 @@ const App = () => {
 
   const [ weatherdata, setWeatherdata] = useState([]) 
 
-  const handleFilterChange = (event) => { 
-    console.log(weatherdata)  
+  const handleFilterChange = (event) => {  
+ 
     setNewFilter(event.target.value)
     setFilteredList(countries.filter(country => country.name.toLowerCase().includes(event.target.value.toLowerCase()) === true))
   }
+
+  
+  useEffect(() => { 
+    const params = {
+        access_key: process.env.REACT_APP_API_KEY,
+        query: 'all'
+    }
+
+    axios      
+    .get(`http://api.weatherstack.com/current`, {params})   
+    .then(response => {        // https access restricted 
+        console.log('promise fulfilled 2') 
+        setWeatherdata(response.data.current)   
+    })
+  }, []);
 
   useEffect(() => {  
     axios      
@@ -149,7 +158,7 @@ const App = () => {
     <>
       <Filter handleFilterChange={handleFilterChange} newFilter={newFilter} />
       <Countries setNewFilter={setNewFilter} newFilter={newFilter}
-       filteredList={filteredList} setFilteredList={setFilteredList} setWeatherdata={setWeatherdata} weatherdata={weatherdata} />
+       filteredList={filteredList} setFilteredList={setFilteredList} setWeatherdata={setWeatherdata} weatherdata={weatherdata}/>
     </>
   )
 }

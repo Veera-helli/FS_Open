@@ -50,13 +50,15 @@ const PersonForm = ({ newName, newNumber, handleChange,
     )
 }
 
-const Persons = ({ persons, newFilter }) => {
+const Persons = ({ persons, newFilter, handleSubmit }) => {
+    
+
     if (newFilter !== ''){
         return (    
             <table>
                 <tbody>
                 {persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()) === true).map(person =>           
-                <Number person={person} key={person.name} />        
+                <Number person={person} key={person.name} handleSubmit={handleSubmit} />        
                 )}
                 </tbody>
             </table>
@@ -67,7 +69,7 @@ const Persons = ({ persons, newFilter }) => {
             <table>
                 <tbody>
                 {persons.map(person =>           
-                <Number person={person} key={person.name} />        
+                <Number person={person} key={person.name} handleSubmit={handleSubmit} />        
                 )}
                 </tbody>
             </table>
@@ -76,11 +78,20 @@ const Persons = ({ persons, newFilter }) => {
     }
 }
 
-const Number = ({ person }) => {
+const Number = ({ person, handleSubmit }) => {
+
+
     return (    
         <tr>
             <td>{person.name}</td>
             <td>{person.number}</td>
+            <td>
+                <form onSubmit={handleSubmit(person)}>
+                    <div>
+                        <button type="submit" >delete</button>
+                    </div>
+                </form>
+            </td>
         </tr> 
     )
 }
@@ -98,6 +109,18 @@ const App = () => {
 
     const handleNumChange = (event) => {   
         setNewNumber(event.target.value)  
+    }
+
+    const handleSubmit = (person) =>(event) => {
+        event.preventDefault()
+        console.log('person id:', person.id)
+        personService.remove(person.id)
+        personService
+            .getAll()     
+            .then(response => {  
+                console.log('setting persons now')             
+                setPersons(response.data)     
+        }) 
     }
 
     useEffect(() => {    
@@ -126,25 +149,9 @@ const App = () => {
       setNewName={setNewName} setNewNumber={setNewNumber} setPersons={setPersons} />
     
       <h2>Numbers</h2>
-      <Persons persons={persons} newFilter={newFilter} />
+      <Persons persons={persons} newFilter={newFilter} handleSubmit={handleSubmit} />
     </>
   )
 }
 
 export default App
-
-/*if (event.target.value !== ''){
-    for (let index = 0; index < persons.length; index++) {
-        const element = persons[index];
-        const name = element.name.toLowerCase()
-        if (!element.name.toLowerCase().includes(event.target.value.toLowerCase())){
-            element.showing = false
-        }
-        else{
-            element.showing = true
-        }
-    }
-}
-else{
-    persons.forEach(person => person.showing = true)
-}*/

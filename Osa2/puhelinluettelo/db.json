@@ -1,35 +1,30 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": 1
-    },
-    {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": 3
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": 4
-    },
-    {
       "name": "Maria Koivu",
       "number": "0754321468",
       "showing": true,
       "id": 5
     },
     {
-      "name": "Minna Alsio",
-      "number": "023816987",
+      "name": "Aino Mäkinen",
+      "number": "040123456",
       "id": 6
+    },
+    {
+      "name": "Sinikka Viro",
+      "number": "32145678",
+      "id": 7
+    },
+    {
+      "name": "Kalle Timonen",
+      "number": "45678909887",
+      "id": 8
+    },
+    {
+      "name": "Mikko Pappila",
+      "number": "0403452617",
+      "id": 9
     }
   ]
 }

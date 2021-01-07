@@ -18,8 +18,7 @@ const PersonForm = ({ newName, newNumber, handleChange,
 
         const nameObject = {
           name: newName,
-          number: newNumber, 
-          showing: true
+          number: newNumber
         }
 
         if (persons.map(person => person.name).includes(newName)){
@@ -32,6 +31,12 @@ const PersonForm = ({ newName, newNumber, handleChange,
             setNewName('')
             setNewNumber('')
         }
+
+        axios    
+            .post('http://localhost:3001/persons', nameObject)    
+            .then(response => {      
+            console.log(response)    
+        })
     }
 
     return (    
@@ -46,7 +51,6 @@ const PersonForm = ({ newName, newNumber, handleChange,
 }
 
 const Persons = ({ persons, newFilter }) => {
-    console.log('Here we are')
     if (newFilter !== ''){
         return (    
             <table>
@@ -104,8 +108,7 @@ const App = () => {
             console.log('promise fulfilled')        
             setPersons(response.data)      
         })  
-    }, [])  
-    console.log('render', persons)
+    }, [])
 
     const handleFilterChange = (event) => {   
         setNewFilter(event.target.value)

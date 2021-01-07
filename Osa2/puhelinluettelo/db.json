@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Aino Mäkinen",
-      "number": "040123456",
-      "id": 6
-    },
-    {
       "name": "Kalle Timonen",
       "number": "0407653425",
       "id": 8
@@ -16,8 +11,8 @@
       "id": 9
     },
     {
-      "name": "Niko",
-      "number": "4",
+      "name": "Sari Nikander",
+      "number": "0409874567",
       "id": 12
     }
   ]

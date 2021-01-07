@@ -27,6 +27,7 @@ const PersonForm = ({ newName, newNumber, handleUpdate, handleChange,
             if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
                 const id = persons.find(person => person.name === newName).id
                 personService.update(id, nameObject)
+                console.log('updating person')
                 personService
                     .getAll()     
                     .then(response => {        
@@ -46,6 +47,12 @@ const PersonForm = ({ newName, newNumber, handleUpdate, handleChange,
             setNewNumber('')
         }
 
+        personService
+        .getAll()     
+        .then(response => {        
+            console.log('promise fulfilled')          
+            setPersons(response.data)      
+        })  
         personService
         .getAll()     
         .then(response => {        
@@ -152,7 +159,7 @@ const App = () => {
         .getAll()     
         .then(response => {  
             setPersons(response.data)     
-    }) 
+        }) 
     }
 
     useEffect(() => {    

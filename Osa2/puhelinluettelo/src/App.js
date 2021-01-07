@@ -10,7 +10,7 @@ const Filter = ({ handleFilterChange, newFilter}) => {
     )
 }
 
-const PersonForm = ({ newName, newNumber, handleChange,
+const PersonForm = ({ newName, newNumber, handleUpdate, handleChange,
      handleNumChange, persons, setNewName, setNewNumber, setPersons}) => {
 
     const addName = (event) => {
@@ -24,19 +24,34 @@ const PersonForm = ({ newName, newNumber, handleChange,
         if (persons.map(person => person.name).includes(newName)){
             setNewName('')
             setNewNumber('')
-            window.alert(`${newName} is already added to phonebook`)
+            if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+                const id = persons.find(person => person.name === newName).id
+                personService.update(id, nameObject)
+                personService
+                    .getAll()     
+                    .then(response => {        
+                        console.log('promise fulfilled')          
+                        setPersons(response.data)      
+                })  
+            }
         }
         else{
-            setPersons(persons.concat(nameObject))
+            console.log('adding new person')
+            personService      
+                .create(nameObject)
+                .then(response => {      
+                    console.log(response)    
+            })
             setNewName('')
             setNewNumber('')
         }
 
-        personService      
-            .create(nameObject)
-            .then(response => {      
-                console.log(response)    
-        })
+        personService
+        .getAll()     
+        .then(response => {        
+            console.log('promise fulfilled')          
+            setPersons(response.data)      
+        })  
     }
 
     return (    
@@ -52,13 +67,12 @@ const PersonForm = ({ newName, newNumber, handleChange,
 
 const Persons = ({ persons, newFilter, handleSubmit }) => {
     
-
     if (newFilter !== ''){
         return (    
             <table>
                 <tbody>
                 {persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()) === true).map(person =>           
-                <Number person={person} key={person.name} handleSubmit={handleSubmit} />        
+                <Number person={person} key={person.id} handleSubmit={handleSubmit} />        
                 )}
                 </tbody>
             </table>
@@ -69,7 +83,7 @@ const Persons = ({ persons, newFilter, handleSubmit }) => {
             <table>
                 <tbody>
                 {persons.map(person =>           
-                <Number person={person} key={person.name} handleSubmit={handleSubmit} />        
+                <Number person={person} key={person.id} handleSubmit={handleSubmit} />        
                 )}
                 </tbody>
             </table>
@@ -79,8 +93,6 @@ const Persons = ({ persons, newFilter, handleSubmit }) => {
 }
 
 const Number = ({ person, handleSubmit }) => {
-
-
     return (    
         <tr>
             <td>{person.name}</td>
@@ -111,6 +123,19 @@ const App = () => {
         setNewNumber(event.target.value)  
     }
 
+    const handleUpdate = (obj) => (event) => { 
+        event.preventDefault()
+          
+        personService
+        .update(persons.find(person => person.name === newName).id, obj)
+    
+        personService
+            .getAll()     
+            .then(response => { 
+                setPersons(response.data)     
+        })  
+    }
+
     const handleSubmit = (person) =>(event) => {
         event.preventDefault()
         const str = `Do you really want to remove ${person.name}?`
@@ -120,10 +145,14 @@ const App = () => {
             personService
                 .getAll()     
                 .then(response => {  
-                    console.log('setting persons now')             
                     setPersons(response.data)     
             }) 
         }
+        personService
+        .getAll()     
+        .then(response => {  
+            setPersons(response.data)     
+    }) 
     }
 
     useEffect(() => {    
@@ -131,7 +160,7 @@ const App = () => {
         personService
             .getAll()     
             .then(response => {        
-                console.log('promise fulfilled')        
+                console.log('promise fulfilled')          
                 setPersons(response.data)      
             })  
     }, [])
@@ -146,7 +175,7 @@ const App = () => {
       <Filter handleFilterChange={handleFilterChange} newFilter={newFilter} />
       
       <h3>Add new</h3>
-      <PersonForm newName={newName} 
+      <PersonForm newName={newName} handleUpdate={handleUpdate}
       newNumber={newNumber} handleChange={handleChange} 
       handleNumChange={handleNumChange} persons={persons} 
       setNewName={setNewName} setNewNumber={setNewNumber} setPersons={setPersons} />

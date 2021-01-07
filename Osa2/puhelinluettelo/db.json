@@ -1,12 +1,6 @@
 {
   "persons": [
     {
-      "name": "Maria Koivu",
-      "number": "0754321468",
-      "showing": true,
-      "id": 5
-    },
-    {
       "name": "Aino Mäkinen",
       "number": "040123456",
       "id": 6

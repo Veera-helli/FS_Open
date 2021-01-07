@@ -113,14 +113,17 @@ const App = () => {
 
     const handleSubmit = (person) =>(event) => {
         event.preventDefault()
-        console.log('person id:', person.id)
-        personService.remove(person.id)
-        personService
-            .getAll()     
-            .then(response => {  
-                console.log('setting persons now')             
-                setPersons(response.data)     
-        }) 
+        const str = `Do you really want to remove ${person.name}?`
+        if (window.confirm(str)) {
+            console.log('person id:', person.id)
+            personService.remove(person.id)
+            personService
+                .getAll()     
+                .then(response => {  
+                    console.log('setting persons now')             
+                    setPersons(response.data)     
+            }) 
+        }
     }
 
     useEffect(() => {    

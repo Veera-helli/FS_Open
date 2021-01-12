@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import './app.css'
 import personService from './services/persons'
 
 //changes output when input is given
@@ -10,8 +11,8 @@ const Filter = ({ handleFilterChange, newFilter}) => {
     )
 }
 
-const PersonForm = ({ newName, newNumber, handleUpdate, handleChange,
-     handleNumChange, persons, setNewName, setNewNumber, setPersons}) => {
+const PersonForm = ({ newName, newNumber, handleChange,
+     handleNumChange, persons, setNewName, setNewNumber, setPersons, setMessage}) => {
 
     const addName = (event) => {
         event.preventDefault()
@@ -28,6 +29,14 @@ const PersonForm = ({ newName, newNumber, handleUpdate, handleChange,
                 const id = persons.find(person => person.name === newName).id
                 personService.update(id, nameObject)
                 console.log('updating person')
+
+                setMessage(          
+                    `${nameObject.name}'s number was changed`        
+                )        
+                setTimeout(() => {          
+                    setMessage(null)        
+                }, 1000)
+
                 personService
                     .getAll()     
                     .then(response => {        
@@ -43,6 +52,12 @@ const PersonForm = ({ newName, newNumber, handleUpdate, handleChange,
                 .then(response => {      
                     console.log(response)    
             })
+            setMessage(          
+                `${nameObject.name} was added to the phonebook`        
+            )        
+            setTimeout(() => {          
+                setMessage(null)        
+            }, 1000)
             setNewName('')
             setNewNumber('')
         }
@@ -115,13 +130,26 @@ const Number = ({ person, handleSubmit }) => {
     )
 }
 
+const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+  
+    return (
+      <div className="notif">
+        {message}
+      </div>
+    )
+}
+
 const App = () => {
     const [ persons, setPersons] = useState([]) 
 
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber ] = useState('')
     const [ newFilter, setNewFilter] = useState('')
-    
+    const [ message, setMessage] = useState(null)
+
     const handleChange = (event) => {   
         setNewName(event.target.value)  
     }
@@ -130,30 +158,26 @@ const App = () => {
         setNewNumber(event.target.value)  
     }
 
-    const handleUpdate = (obj) => (event) => { 
-        event.preventDefault()
-          
-        personService
-        .update(persons.find(person => person.name === newName).id, obj)
-    
-        personService
-            .getAll()     
-            .then(response => { 
-                setPersons(response.data)     
-        })  
+    const handleFilterChange = (event) => {   
+        setNewFilter(event.target.value)
     }
 
     const handleSubmit = (person) =>(event) => {
         event.preventDefault()
         const str = `Do you really want to remove ${person.name}?`
         if (window.confirm(str)) {
-            console.log('person id:', person.id)
             personService.remove(person.id)
             personService
                 .getAll()     
                 .then(response => {  
                     setPersons(response.data)     
             }) 
+            setMessage(          
+                `${person.name} was removed from phonebook`        
+            )        
+            setTimeout(() => {          
+                setMessage(null)        
+            }, 1000)
         }
         personService
         .getAll()     
@@ -172,20 +196,18 @@ const App = () => {
             })  
     }, [])
 
-    const handleFilterChange = (event) => {   
-        setNewFilter(event.target.value)
-    }
-
   return (
     <>
       <h2>Phonebook</h2>
       <Filter handleFilterChange={handleFilterChange} newFilter={newFilter} />
       
       <h3>Add new</h3>
-      <PersonForm newName={newName} handleUpdate={handleUpdate}
-      newNumber={newNumber} handleChange={handleChange} 
-      handleNumChange={handleNumChange} persons={persons} 
-      setNewName={setNewName} setNewNumber={setNewNumber} setPersons={setPersons} />
+      <Notification message={message} />
+      <PersonForm newName={newName} setNewName={setNewName} 
+      newNumber={newNumber} setNewNumber={setNewNumber}
+      handleChange={handleChange} handleNumChange={handleNumChange} 
+      persons={persons} setPersons={setPersons} 
+      setMessage={setMessage} />
     
       <h2>Numbers</h2>
       <Persons persons={persons} newFilter={newFilter} handleSubmit={handleSubmit} />

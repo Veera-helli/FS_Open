@@ -11,9 +11,24 @@
       "id": 9
     },
     {
-      "name": "Sari Nikander",
-      "number": "0409874567",
-      "id": 12
+      "name": "Arttu Pennanen",
+      "number": "0453216789",
+      "id": 13
+    },
+    {
+      "name": "Mia Halme",
+      "number": "0405437654",
+      "id": 15
+    },
+    {
+      "name": "Lauri Jokinen",
+      "number": "0508763467",
+      "id": 16
+    },
+    {
+      "name": "Mika Fors",
+      "number": "0403458765",
+      "id": 17
     }
   ]
 }

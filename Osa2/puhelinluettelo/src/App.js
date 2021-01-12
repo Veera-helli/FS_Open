@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
 
-
+//changes output when input is given
 const Filter = ({ handleFilterChange, newFilter}) => {
     return (    
     <form>

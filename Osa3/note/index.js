@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+// from example 
+
 let notes = [  
     {    
         id: 1,    
@@ -16,6 +18,7 @@ let notes = [
         date: "2020-01-10T19:20:14.298Z",    
         important: true  
     }]
+
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello World!</h1>')
